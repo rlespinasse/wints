@@ -3,6 +3,8 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
+use fuzzy_matcher::skim::SkimMatcherV2;
+use fuzzy_matcher::FuzzyMatcher;
 use serde::{Deserialize, Serialize};
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
@@ -56,11 +58,61 @@ impl Config {
             .collect()
     }
 
-    pub(crate) fn urls_from_context(&self, context: String) -> Vec<String> {
+    pub(crate) fn urls_from_context(&self, context: Vec<String>) -> Vec<String> {
+        let matcher = SkimMatcherV2::default();
         self.elements
             .iter()
-            .filter(|element| element.context == context)
+            .filter(|element| {
+                let matching_terms_count =
+                    Config::matching_term_count(&matcher, &context, &element);
+                matching_terms_count == context.capacity()
+            })
             .flat_map(|element| element.urls.clone())
             .collect()
+    }
+
+    pub(crate) fn nearest_context(&self, context: Vec<String>) -> Option<String> {
+        self.contexts_sorted_by_matching_accuracy(context)
+            .first()
+            .cloned()
+    }
+
+    fn contexts_sorted_by_matching_accuracy(&self, context: Vec<String>) -> Vec<String> {
+        let matcher = SkimMatcherV2::default();
+        let mut partially_matching_elements: Vec<&Element> = self
+            .elements
+            .iter()
+            .filter(|element| {
+                let matching_terms_count =
+                    Config::matching_term_count(&matcher, &context, &element);
+                matching_terms_count != context.capacity() && matching_terms_count != 0
+            })
+            .collect();
+
+        partially_matching_elements.sort_by(|first, second| {
+            let first_count = Config::matching_term_count(&matcher, &context, &first);
+            let second_count = Config::matching_term_count(&matcher, &context, &second);
+            first_count.cmp(&second_count)
+        });
+
+        partially_matching_elements
+            .iter()
+            .map(|element| element.context.clone())
+            .collect()
+    }
+
+    fn matching_term_count(
+        matcher: &SkimMatcherV2,
+        context: &[String],
+        element: &Element,
+    ) -> usize {
+        context
+            .iter()
+            .filter(|term| {
+                matcher
+                    .fuzzy_match(element.context.as_str(), term.as_str())
+                    .is_some()
+            })
+            .count()
     }
 }
