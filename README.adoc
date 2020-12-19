@@ -2,7 +2,7 @@
 
 :crate-badge: https://img.shields.io/crates/v/wints.svg
 :crate: https://crates.io/crates/wints
-:ci-badge2: https://github.com/rlespinasse/wints/workflows/Continuous%20integration/badge.svg
+:ci-badge: https://github.com/rlespinasse/wints/workflows/Continuous%20integration/badge.svg
 :security-badge: https://github.com/rlespinasse/wints/workflows/Security%20audit/badge.svg
 :actions: https://github.com/rlespinasse/wints/actions
 :license-badge: https://img.shields.io/github/license/rlespinasse/wints
