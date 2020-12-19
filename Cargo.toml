@@ -1,8 +1,15 @@
 [package]
 name = "wints"
-version = "0.1.0"
-authors = ["Romain Lespinasse <romain.lespinasse@gmail.com>"]
+version = "0.2.0"
 edition = "2018"
+authors = ["Romain Lespinasse <romain.lespinasse@gmail.com>"]
+description = "a fuzzy term-based url opener"
+readme = "CRATES.md"
+license-file = "LICENSE"
+documentation = "https://docs.rs/wints"
+repository = "https://github.com/rlespinasse/wints"
+keywords = ["fuzzy-matching", "command-line", "url"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = "2.33.3"

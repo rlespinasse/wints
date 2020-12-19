@@ -1,0 +1,65 @@
+= WINTS
+
+:crate-badge: https://img.shields.io/crates/v/wints.svg
+:crate: https://crates.io/crates/wints
+:ci-badge2: https://github.com/rlespinasse/wints/workflows/Continuous%20integration/badge.svg
+:security-badge: https://github.com/rlespinasse/wints/workflows/Security%20audit/badge.svg
+:actions: https://github.com/rlespinasse/wints/actions
+:license-badge: https://img.shields.io/github/license/rlespinasse/wints
+:license: https://github.com/rlespinasse/wints/blob/v0.x/LICENSE
+:cargo-installation: https://doc.rust-lang.org/cargo/getting-started/installation.html
+
+image:{crate-badge}[Crate,link={crate}]
+image:{ci-badge}[CI Status,link={actions}]
+image:{security-badge}[Security Audit Status,link={actions}]
+image:{license-badge}[License,link={license}]
+
+You may have a lot of URLs for a lot of context.
+
+If the question is **What I Need To See in this context?**, then the answer is `wints`.
+
+## Installation
+
+* Via {cargo-installation}[Cargo]
++
+[source,shell]
+----
+cargo install wints
+----
+
+* Build Manually
++
+[source,shell]
+----
+git clone --depth 1 git@github.com:rlespinasse/wints.git ~/.wints
+cd ~/.wints
+cargo install --path .
+cargo build --release
+# put the resulting `target/release/wints` executable on your PATH.
+----
+
+## Usage
+
+To run, `wints` need a `.wints.yaml` file like this default one (generated when missing)
+
+[source,yaml]
+----
+---
+elements:
+  - context: repository code
+    urls:
+      - https://github.com/rlespinasse/wints
+  - context: repository issues
+    urls:
+      - https://github.com/rlespinasse/wints/issues
+----
+
+So when you run
+
+- `wints repository` will open all urls
+- `wints issues` will only open the urls on **repository issues** context
+
+Fuzzy-matching is also possible,
+
+- `wints repo code` will only open the urls on **repository code** context
+
