@@ -28,7 +28,7 @@ fn main() {
     let config = load_configuration();
 
     match matches.values_of_lossy("terms") {
-        Some(terms) => open_urls_based_on_terms(terms.join(" "), config),
+        Some(terms) => open_urls_based_on_terms(terms, config),
         None => terms_are_mandatory(config),
     }
 }
@@ -40,9 +40,18 @@ fn terms_are_mandatory(config: Config) {
     }
 }
 
-fn open_urls_based_on_terms(terms_search: String, config: Config) {
-    println!(" {} Search for '{}'", SEARCH, terms_search);
-    for url in config.urls_from_context(terms_search).iter() {
+fn open_urls_based_on_terms(terms_search: Vec<String>, config: Config) {
+    println!(" {} Search for '{}'", SEARCH, terms_search.join(" "));
+    let urls = config.urls_from_context(terms_search.clone());
+    if urls.is_empty() {
+        if let Some(nearest_context) = config.nearest_context(terms_search) {
+            println!(
+                " {} Narrowly missed. Try using terms from '{}'",
+                CAUTION, nearest_context
+            )
+        }
+    }
+    for url in urls.iter() {
         match webbrowser::open(url) {
             Ok(_) => println!("open {}", url),
             Err(err) => eprintln!("can't open {}: {}", url, err),
