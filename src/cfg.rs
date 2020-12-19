@@ -23,13 +23,16 @@ struct Element {
 impl Config {
     fn default_config() -> Config {
         Config {
-            elements: vec![Element {
-                context: "A context".into(),
-                urls: vec![
-                    "https://first.website.com".into(),
-                    "https://second.website.com".into(),
-                ],
-            }],
+            elements: vec![
+                Element {
+                    context: "repository code".into(),
+                    urls: vec!["https://github.com/rlespinasse/wints".into()],
+                },
+                Element {
+                    context: "repository issues".into(),
+                    urls: vec!["https://github.com/rlespinasse/wints/issues".into()],
+                },
+            ],
         }
     }
 
