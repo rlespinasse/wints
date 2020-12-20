@@ -12,15 +12,29 @@ type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Config {
     elements: Vec<Element>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    ignore: Option<Ignore>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 struct Element {
     context: String,
     urls: Vec<String>,
 }
 
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+struct Ignore {
+    urls: Option<Vec<String>>,
+}
+
 impl Config {
+    pub(crate) fn new() -> Config {
+        Config {
+            elements: vec![],
+            ignore: None,
+        }
+    }
+
     fn default_config() -> Config {
         Config {
             elements: vec![
@@ -33,7 +47,27 @@ impl Config {
                     urls: vec!["https://github.com/rlespinasse/wints/issues".into()],
                 },
             ],
+            ignore: None,
         }
+    }
+
+    pub(crate) fn append_to_context(&mut self, context: String, urls: Vec<String>) {
+        let mut updated_elements: Vec<Element> = Vec::new();
+        updated_elements.clone_from_slice(self.elements.as_slice());
+        let position = self
+            .elements
+            .iter()
+            .position(|element| element.context == context);
+        match position {
+            Some(p) => {
+                let mut current_urls = updated_elements[p].urls.clone();
+                current_urls.extend(urls.iter().cloned());
+                updated_elements[p].urls = current_urls;
+            }
+            None => updated_elements.push(Element { context, urls }),
+        }
+
+        self.elements = updated_elements
     }
 
     pub(crate) fn read_file(filename: &str) -> Result<Config> {
@@ -72,6 +106,20 @@ impl Config {
             })
             .flat_map(|element| element.urls.clone())
             .collect()
+    }
+
+    pub(crate) fn urls(&self) -> Vec<String> {
+        self.elements
+            .iter()
+            .flat_map(|element| element.urls.clone())
+            .collect()
+    }
+
+    pub(crate) fn ignored_urls(&self) -> Vec<String> {
+        match &self.ignore {
+            Some(ignore) => ignore.urls.clone().unwrap_or_default(),
+            None => Vec::new(),
+        }
     }
 
     pub(crate) fn nearest_context(&self, context: Vec<String>) -> Option<String> {

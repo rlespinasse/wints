@@ -27,9 +27,9 @@ elements:
 
 So when you run
 
-- `wints repository` will open all urls
-- `wints issues` will only open the urls on **repository issues** context
+- `wints repository` will open all URLs
+- `wints issues` will only open the URLs on **repository issues** context
 
 Fuzzy-matching is also possible,
 
-- `wints repo code` will only open the urls on **repository code** context
+- `wints repo code` will only open the URLs on **repository code** context

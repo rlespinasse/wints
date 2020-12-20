@@ -1,9 +1,9 @@
 [package]
 name = "wints"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2018"
 authors = ["Romain Lespinasse <romain.lespinasse@gmail.com>"]
-description = "a fuzzy term-based url opener"
+description = "wints is a fuzzy term-based URLs opener"
 readme = "CRATES.md"
 license-file = "LICENSE"
 documentation = "https://docs.rs/wints"
@@ -18,3 +18,6 @@ serde_yaml = "0.8"
 webbrowser = "0.5.5"
 fuzzy-matcher = "0.3.7"
 ansi_term = "0.12.1"
+grep = "0.2"
+linkify = "0.4.0"
+ignore = "0.4"
