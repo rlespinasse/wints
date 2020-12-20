@@ -2,7 +2,7 @@ use grep::regex::RegexMatcher;
 use grep::searcher::sinks::UTF8;
 use grep::searcher::Searcher;
 
-use ignore::Walk;
+use ignore::WalkBuilder;
 use linkify::{LinkFinder, LinkKind};
 use std::error;
 use std::path::{Path, PathBuf};
@@ -11,9 +11,12 @@ const URL_PATTERN: &str = r#"(http://|https://)"#;
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
-pub(crate) fn scan_urls(path: String) -> Vec<String> {
-    let files: Vec<PathBuf> = Walk::new(path)
-        .into_iter()
+pub(crate) fn scan_urls(path: &str, ignore_filename: &str) -> Vec<String> {
+    let walk = WalkBuilder::new(path)
+        .add_custom_ignore_filename(ignore_filename)
+        .build();
+
+    let files: Vec<PathBuf> = walk
         .filter_map(|r| r.ok())
         .filter(|d| d.path().is_file())
         .map(|d| d.into_path())

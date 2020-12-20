@@ -13,7 +13,7 @@ type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 pub(crate) struct Config {
     elements: Vec<Element>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    ignore: Option<Ignore>,
+    options: Option<Options>,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -23,20 +23,22 @@ struct Element {
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-struct Ignore {
-    urls: Option<Vec<String>>,
+struct Options {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    scan_ignore_urls: Option<Vec<String>>,
 }
 
 impl Config {
     pub(crate) fn new() -> Config {
         Config {
+            options: None,
             elements: vec![],
-            ignore: None,
         }
     }
 
     fn default_config() -> Config {
         Config {
+            options: None,
             elements: vec![
                 Element {
                     context: "repository code".into(),
@@ -47,13 +49,11 @@ impl Config {
                     urls: vec!["https://github.com/rlespinasse/wints/issues".into()],
                 },
             ],
-            ignore: None,
         }
     }
 
     pub(crate) fn append_to_context(&mut self, context: String, urls: Vec<String>) {
-        let mut updated_elements: Vec<Element> = Vec::new();
-        updated_elements.clone_from_slice(self.elements.as_slice());
+        let mut updated_elements: Vec<Element> = self.elements.clone();
         let position = self
             .elements
             .iter()
@@ -70,22 +70,21 @@ impl Config {
         self.elements = updated_elements
     }
 
-    pub(crate) fn read_file(filename: &str) -> Result<Config> {
-        let file = File::open(filename)?;
+    pub(crate) fn read_file(config_file: &Path) -> Result<Config> {
+        let file = File::open(config_file)?;
         let config: Config = serde_yaml::from_reader(file)?;
         Ok(config)
     }
 
-    pub(crate) fn write_file(&self, config_filename: &str) -> Result<()> {
-        let path = Path::new(config_filename);
-        let mut file = File::create(&path)?;
+    pub(crate) fn write_file(&self, config_file: &Path) -> Result<()> {
+        let mut file = File::create(&config_file)?;
         let config_content_string = serde_yaml::to_string(&self)?;
         file.write_all(config_content_string.as_bytes())?;
         Ok(())
     }
 
-    pub(crate) fn write_default_file(config_filename: &str) -> Result<()> {
-        Config::default_config().write_file(config_filename)
+    pub(crate) fn write_default_file(config_file: &Path) -> Result<()> {
+        Config::default_config().write_file(config_file)
     }
 
     pub(crate) fn list_of_contexts(&self) -> Vec<String> {
@@ -115,9 +114,9 @@ impl Config {
             .collect()
     }
 
-    pub(crate) fn ignored_urls(&self) -> Vec<String> {
-        match &self.ignore {
-            Some(ignore) => ignore.urls.clone().unwrap_or_default(),
+    pub(crate) fn option_scan_ignored_urls(&self) -> Vec<String> {
+        match &self.options {
+            Some(options) => options.scan_ignore_urls.clone().unwrap_or_default(),
             None => Vec::new(),
         }
     }

@@ -23,6 +23,7 @@ static TRY: &str = "🧭";
 static DONE: &str = "✅";
 
 const CONFIG_FILENAME: &str = ".wints.yaml";
+const IGNORE_FILENAME: &str = ".wintsignore";
 
 fn main() {
     let cli_name = Style::new().bold().paint("wints");
@@ -47,16 +48,18 @@ fn main() {
         )
         .get_matches();
 
+    let config_file = Path::new(CONFIG_FILENAME);
+
     if matches.is_present("scan") {
-        scan_for_new_urls();
+        scan_for_new_urls(config_file);
         exit(0)
     }
 
-    search_terms(matches.values_of_lossy("terms"));
+    search_terms(config_file, matches.values_of_lossy("terms"));
 }
 
-fn search_terms(matching_terms: Option<Vec<String>>) {
-    let config = load_configuration();
+fn search_terms(config_file: &Path, matching_terms: Option<Vec<String>>) {
+    let config = load_configuration(config_file);
     match matching_terms {
         Some(terms) => open_urls_based_on_terms(terms, config),
         None => terms_are_mandatory(config),
@@ -96,24 +99,23 @@ fn open_urls_based_on_terms(terms_search: Vec<String>, config: Config) {
     }
 }
 
-fn scan_for_new_urls() {
+fn scan_for_new_urls(config_file: &Path) {
     println!(" {} Scanning for new URLs...", SEARCH);
-    let scanned_urls = scan_urls("./".to_string());
-    add_urls_in_configuration("need to be contextualised".to_string(), scanned_urls);
+    let scanned_urls = scan_urls("./", IGNORE_FILENAME);
+    add_urls_in_configuration(
+        config_file,
+        "need to be contextualised".to_string(),
+        scanned_urls,
+    );
     println!(" {} Scan completed", DONE);
 }
 
-fn add_urls_in_configuration(context: String, urls: Vec<String>) {
-    let path = Path::new(CONFIG_FILENAME);
-    let mut config: Config;
-    if path.exists() {
-        config = read_configuration();
-    } else {
-        config = Config::new();
-    }
+fn add_urls_in_configuration(config_file: &Path, context: String, urls: Vec<String>) {
+    let mut config = read_configuration(config_file).unwrap_or_else(Config::new);
 
     let already_known_urls = config.urls();
-    let ignored_urls = config.ignored_urls();
+    let ignored_urls = config.option_scan_ignored_urls();
+
     let new_urls: Vec<String> = urls
         .into_iter()
         .filter(|url| !already_known_urls.contains(url) && !ignored_urls.contains(url))
@@ -128,11 +130,11 @@ fn add_urls_in_configuration(context: String, urls: Vec<String>) {
             _ => "URLs",
         };
 
-        match config.write_file(CONFIG_FILENAME) {
+        match config.write_file(config_file) {
             Err(why) => {
                 eprintln!(
                     "couldn't write {}\n{}",
-                    Green.bold().paint(CONFIG_FILENAME),
+                    Green.bold().paint(config_file.display().to_string()),
                     Red.paint(why.to_string())
                 );
                 exit(1)
@@ -148,39 +150,42 @@ fn add_urls_in_configuration(context: String, urls: Vec<String>) {
     }
 }
 
-fn load_configuration() -> Config {
-    ensure_configuration_file_exists();
-    read_configuration()
+fn load_configuration(config_file: &Path) -> Config {
+    ensure_configuration_file_exists(config_file);
+    read_configuration(config_file).unwrap()
 }
 
-fn read_configuration() -> Config {
-    match Config::read_file(CONFIG_FILENAME) {
+fn read_configuration(config_file: &Path) -> Option<Config> {
+    if !config_file.exists() {
+        return None;
+    }
+    match Config::read_file(config_file) {
         Err(why) => {
             eprintln!(
                 "can't read {}\n{}",
-                Green.bold().paint(CONFIG_FILENAME),
+                Green.bold().paint(config_file.display().to_string()),
                 Red.paint(why.to_string())
             );
             exit(1)
         }
-        Ok(config) => config,
+        Ok(config) => Some(config),
     }
 }
 
-fn ensure_configuration_file_exists() {
-    let path = Path::new(CONFIG_FILENAME);
-    if !path.exists() {
+fn ensure_configuration_file_exists(config_file: &Path) {
+    if !config_file.exists() {
+        let filename = config_file.display().to_string();
         println!(
             " {} Can't find any {} file.",
             CAUTION,
-            Green.bold().paint(CONFIG_FILENAME),
+            Green.bold().paint(&filename),
         );
 
-        match Config::write_default_file(CONFIG_FILENAME) {
+        match Config::write_default_file(config_file) {
             Err(why) => {
                 eprintln!(
                     "couldn't create {}\n{}",
-                    Green.bold().paint(CONFIG_FILENAME),
+                    Green.bold().paint(&filename),
                     Red.paint(why.to_string())
                 );
                 exit(1)
@@ -188,7 +193,7 @@ fn ensure_configuration_file_exists() {
             Ok(_) => println!(
                 " {} So an empty {} file has been created.",
                 WRITE,
-                Green.bold().paint(CONFIG_FILENAME)
+                Green.bold().paint(&filename)
             ),
         };
     }
