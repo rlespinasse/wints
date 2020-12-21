@@ -2,21 +2,18 @@ use grep::regex::RegexMatcher;
 use grep::searcher::sinks::UTF8;
 use grep::searcher::Searcher;
 
-use ignore::WalkBuilder;
+use ignore::{Walk, WalkBuilder};
 use linkify::{LinkFinder, LinkKind};
 use std::error;
 use std::path::{Path, PathBuf};
 
 const URL_PATTERN: &str = r#"(http://|https://)"#;
+const IGNORE_FILENAME: &str = ".wintsignore";
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
-pub(crate) fn scan_urls(path: &str, ignore_filename: &str) -> Vec<String> {
-    let walk = WalkBuilder::new(path)
-        .add_custom_ignore_filename(ignore_filename)
-        .build();
-
-    let files: Vec<PathBuf> = walk
+pub(crate) fn scan_urls(path: &str) -> Vec<String> {
+    let files: Vec<PathBuf> = build_walk(path)
         .filter_map(|r| r.ok())
         .filter(|d| d.path().is_file())
         .map(|d| d.into_path())
@@ -31,6 +28,15 @@ pub(crate) fn scan_urls(path: &str, ignore_filename: &str) -> Vec<String> {
     raw_urls.sort();
     raw_urls.dedup();
     raw_urls
+}
+
+fn build_walk(path: &str) -> Walk {
+    let mut walker = WalkBuilder::new(path);
+    walker.add_custom_ignore_filename(IGNORE_FILENAME);
+    if let Some(home) = dirs::home_dir() {
+        walker.add_custom_ignore_filename(home.join(IGNORE_FILENAME));
+    }
+    walker.build()
 }
 
 fn extract_lines_with_url(path: &Path) -> Result<Vec<String>> {
