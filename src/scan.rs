@@ -1,11 +1,11 @@
+use std::error;
+use std::path::{Path, PathBuf};
+
 use grep::regex::RegexMatcher;
 use grep::searcher::sinks::UTF8;
 use grep::searcher::Searcher;
-
 use ignore::{Walk, WalkBuilder};
 use linkify::{LinkFinder, LinkKind};
-use std::error;
-use std::path::{Path, PathBuf};
 
 const URL_PATTERN: &str = r#"(http://|https://)"#;
 const IGNORE_FILENAME: &str = ".wintsignore";
