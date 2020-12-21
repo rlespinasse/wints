@@ -9,7 +9,7 @@ extern crate ignore;
 use ansi_term::Colour::{Green, Red};
 use ansi_term::Style;
 use cfg::Config;
-use clap::{App, Arg};
+use clap::{App, Arg, SubCommand};
 use scan::scan_urls;
 use std::path::Path;
 use std::process::exit;
@@ -23,7 +23,6 @@ static TRY: &str = "🧭";
 static DONE: &str = "✅";
 
 const CONFIG_FILENAME: &str = ".wints.yaml";
-const IGNORE_FILENAME: &str = ".wintsignore";
 
 fn main() {
     let cli_name = Style::new().bold().paint("wints");
@@ -35,17 +34,13 @@ fn main() {
         .about(format!("{} - {}", display_name, about).as_str())
         .version(version.to_string().as_str())
         .arg(
-            Arg::with_name("scan")
-                .long("scan")
-                .help("Scan the current directory for new URLs"),
-        )
-        .arg(
             Arg::with_name("terms")
                 .help("Terms to search for")
                 .conflicts_with("scan")
                 .multiple(true)
                 .index(1),
         )
+        .subcommand(SubCommand::with_name("scan").about("Scan the current directory for new URLs"))
         .get_matches();
 
     let config_file = Path::new(CONFIG_FILENAME);
