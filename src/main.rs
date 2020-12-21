@@ -96,7 +96,7 @@ fn open_urls_based_on_terms(terms_search: Vec<String>, config: Config) {
 
 fn scan_for_new_urls(config_file: &Path) {
     println!(" {} Scanning for new URLs...", SEARCH);
-    let scanned_urls = scan_urls("./", IGNORE_FILENAME);
+    let scanned_urls = scan_urls("./");
     add_urls_in_configuration(
         config_file,
         "need to be contextualised".to_string(),
