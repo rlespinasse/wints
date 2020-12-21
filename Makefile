@@ -9,14 +9,20 @@ test:
 fmt:
 	@echo + $@
 	cargo fmt --all -- --check
+
 clippy:
 	@echo + $@
 	cargo clippy --all-features
 
+DEPS=
+deps:
+	@echo + $@
+	cargo tree $(DEPS)
+
 release-%:
 	@echo + $@
-	cargo release --dev-version-ext next -- $*
+	cargo release -- $*
 
 dryrun-release-%:
 	@echo + $@
-	cargo release --dry-run -vv --dev-version-ext next -- $*
+	cargo release --dry-run -vv -- $*
