@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add cli subcommand `scan` in replacement of option `--scan`
 - Ignore globs also from `~/.wintsignore` during scan
+- Add `--dry-run` option for search and scan features
 
 ### Removed
 
