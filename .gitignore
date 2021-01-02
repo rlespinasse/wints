@@ -9,4 +9,4 @@
 *.iml
 
 # Configuration file
-.wints.yaml
+.wints/
