@@ -1,0 +1,67 @@
+= WINTS usage guide
+
+== How to use it : Search mode
+
+By default, **wints** act in a search mode (check `wints -h` for more).
+
+You can test it with
+
+- `wints crate` to open the url to `wints` as a Rust crate
+- `wints issues` to open the issues of the `wints` **repository**
+
+Search by Fuzzy-matching is also possible,
+
+- `wints repo` will only open all URLs related to `wints` **repository**
+
+It's possible because `wints` use a module (named `main`) module to define all thoses URLs within a context
+
+.Content of .wints/modules/main.yaml
+[source,yaml]
+----
+version: 1
+elements:
+  - context: repository code
+    urls:
+      - https://github.com/rlespinasse/wints
+  - context: repository issues
+    urls:
+      - https://github.com/rlespinasse/wints/issues
+  - context: repository crate
+    urls:
+      - https://crates.io/crates/wints
+  - context: repository usage
+    urls:
+      - https://github.com/rlespinasse/wints/blob/v0.x/USAGE.adoc
+----
+
+NOTE: this `main` module is a in-memory module setup when no module is present
+
+== Create your own module
+
+NOTE: All your modules will be stored inside a `.wints/modules` directory.
+
+You can create your own module `main` or another name using
+
+[cols="1a,2a,1a",opts="header"]
+|===
+| Command
+| Usage
+| For more
+
+| `wints init`
+| Initialise a new module
+| `wints help init`
+
+| `wints add <URL> <CONTEXT>`
+| Add a url to a context inside a module (will create it if needed)
+| `wints help add`
+
+| `wints scan`
+| Scan current directory tree for URLs and add it to the choosen module
+| `wints help scan`
+
+|===
+
+TIP: It's recommanded to have at list one `main` module for default search capability.
+
+NOTE: Using `-g, --global` option, the manipulate module will be considered as a `global` module and store in `.wints/modules` inside your Home directory.

@@ -12,24 +12,13 @@ cargo install wints
 
 ## Usage
 
-To run, `wints` need a `.wints.yaml` file like this default one (generated when missing)
+You can test it with
 
-```yaml
----
-elements:
-  - context: repository code
-    urls:
-      - https://github.com/rlespinasse/wints
-  - context: repository issues
-    urls:
-      - https://github.com/rlespinasse/wints/issues
-```
-
-So when you run
-
-- `wints repository` will open all URLs
-- `wints issues` will only open the URLs on **repository issues** context
+- `wints crate` to open **THIS** url
+- `wints issues` to open the issues of the `wints` **repository**
 
 Fuzzy-matching is also possible,
 
-- `wints repo code` will only open the URLs on **repository code** context
+- `wints repo` will only open all URLs related to `wints` **repository**
+
+To known more, you can run `wints usage` to go to the [Usage guide](https://github.com/rlespinasse/wints/blob/v0.x/USAGE.adoc).

@@ -11,14 +11,24 @@ repository = "https://github.com/rlespinasse/wints"
 keywords = ["fuzzy-matching", "command-line", "url"]
 categories = ["command-line-utilities"]
 
+[lib]
+name = "wints"
+path = "src/wints/lib.rs"
+
 [dependencies]
+anyhow = "1.0"
 clap = "2.33.3"
+directories-next = "2.0.0"
+fuzzy-matcher = "0.3.7"
+glob = "0.3.0"
+grep = "0.2"
+ignore = "0.4"
+linkify = "0.4.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.8"
 webbrowser = "0.5.5"
-fuzzy-matcher = "0.3.7"
-ansi_term = "0.12.1"
-grep = "0.2"
-linkify = "0.4.0"
-ignore = "0.4"
-dirs = "3.0"
+
+[dev-dependencies]
+assert_cmd = "1.0.2"
+predicates = "1.0.6"
+tempfile = "3.1.0"

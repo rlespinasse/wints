@@ -11,13 +11,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add cli subcommand `scan` in replacement of option `--scan`
-- Ignore globs also from `~/.wintsignore` during scan
-- Add `--dry-run` option for search and scan features
+- Add module configuration inside `.wints/modules`
+- Add cli subcommands
+  - `init` for module initialization
+  - `add` to one url to a context
+  - `scan` to find new URL inside a directory tree
+  - `url ignore` to ignore some URL during scan
+  - `url ignore-glob` to ignore some file during scan
+- Add options for all features
+  - `--dry-run` to just log what are going to do
+  - `--config` as folder of local configuration storage
+  - `--global-config` as folder of global configuration storage
+- Add options for all module-related features
+  - `--module` to specify the module name to use
+- Ignore globs from `.wints/ignore` or `HOME_DIR/.wints/ignore` during scan
+- Add `path` selection to `scan` subcommand
+
+### Fixed
+
+- Output the correct number of new URLs during `scan`
 
 ### Removed
 
 - Remove cli option `--scan`, replaced by subcommand `scan`
+- Remove use of `.wints.yaml` file, replace by `.wints/module/main.yaml`
+- Remove use of `.wintsignore` file, replace by `.wints/ignore`
+- Remove use of `HOME_DIR/.wintsignore` file, replace by `HOME_DIR/.wints/ignore`
+- Ignored Urls from `.wints.yaml` are move to  `.wints/options.yaml`
 
 ## [0.0.4] - 2014-08-09
 
