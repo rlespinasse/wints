@@ -1,6 +1,6 @@
 [package]
 name = "wints"
-version = "0.4.1-next"
+version = "0.5.0"
 edition = "2018"
 authors = ["Romain Lespinasse <romain.lespinasse@gmail.com>"]
 description = "wints is a fuzzy term-based URLs opener"
