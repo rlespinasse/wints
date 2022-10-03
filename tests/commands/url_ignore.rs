@@ -36,7 +36,8 @@ fn ignore_locally() -> Result<()> {
         r#"---
 version: 1
 ignored_urls:
-  - "https://site.tld""#
+  - "https://site.tld"
+"#
     );
 
     Ok(())
@@ -76,7 +77,8 @@ fn ignore_globally() -> Result<()> {
         r#"---
 version: 1
 ignored_urls:
-  - "https://site.tld""#
+  - "https://site.tld"
+"#
     );
 
     Ok(())
@@ -137,7 +139,8 @@ fn multiple_ignore_locally() -> Result<()> {
 version: 1
 ignored_urls:
   - "https://site.tld"
-  - "https://site2.tld""#
+  - "https://site2.tld"
+"#
     );
 
     Ok(())
@@ -202,7 +205,8 @@ fn multiple_ignore_globally() -> Result<()> {
 version: 1
 ignored_urls:
   - "https://site.tld"
-  - "https://site2.tld""#
+  - "https://site2.tld"
+"#
     );
 
     Ok(())
