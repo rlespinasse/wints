@@ -33,10 +33,9 @@ fn ignore_locally() -> Result<()> {
     let content = fs::read_to_string(config_path)?;
     assert_eq!(
         content,
-        r#"---
-version: 1
+        r#"version: 1
 ignored_urls:
-  - "https://site.tld"
+- https://site.tld
 "#
     );
 
@@ -74,10 +73,9 @@ fn ignore_globally() -> Result<()> {
     let content = fs::read_to_string(config_path)?;
     assert_eq!(
         content,
-        r#"---
-version: 1
+        r#"version: 1
 ignored_urls:
-  - "https://site.tld"
+- https://site.tld
 "#
     );
 
@@ -135,11 +133,10 @@ fn multiple_ignore_locally() -> Result<()> {
     let content = fs::read_to_string(config_path)?;
     assert_eq!(
         content,
-        r#"---
-version: 1
+        r#"version: 1
 ignored_urls:
-  - "https://site.tld"
-  - "https://site2.tld"
+- https://site.tld
+- https://site2.tld
 "#
     );
 
@@ -201,11 +198,10 @@ fn multiple_ignore_globally() -> Result<()> {
     let content = fs::read_to_string(config_path)?;
     assert_eq!(
         content,
-        r#"---
-version: 1
+        r#"version: 1
 ignored_urls:
-  - "https://site.tld"
-  - "https://site2.tld"
+- https://site.tld
+- https://site2.tld
 "#
     );
 
