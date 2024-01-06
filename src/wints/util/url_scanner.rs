@@ -102,7 +102,7 @@ mod tests {
 
         let options = url_scanner::UrlScannerOptions {
             ignore_files: vec![ignore1_path.clone()],
-            scan_path: dir.path().clone().to_path_buf(),
+            scan_path: dir.path().to_path_buf(),
         };
 
         let mut file1 = File::create(dir.path().join("file1.txt"))?;
@@ -146,7 +146,7 @@ mod tests {
 
         let options = url_scanner::UrlScannerOptions {
             ignore_files: vec![ignore1_path.clone(), ignore2_path.clone()],
-            scan_path: dir.path().clone().to_path_buf(),
+            scan_path: dir.path().to_path_buf(),
         };
 
         let mut file1 = File::create(dir.path().join("file1.txt"))?;

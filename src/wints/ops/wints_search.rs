@@ -69,8 +69,8 @@ fn search_urls_based_on_terms(options: &SearchOptions, module: WintsModule) {
 
     let urls = module.list_of_urls_from_matching_context(matching_terms);
     match urls.is_empty() {
-        true => urls_not_found(&options, module),
-        false => open_urls(&options, urls),
+        true => urls_not_found(options, module),
+        false => open_urls(options, urls),
     };
 
     println!(" {} Search completed.", DONE)
@@ -82,7 +82,7 @@ fn open_urls(options: &SearchOptions, urls: Vec<String>) {
             true => println!(" {} Open {}", DRY_RUN, url),
             false => match webbrowser::open(url) {
                 Ok(_) => println!(" {} Open {}", GOTO, url),
-                Err(why) => println!("can't open {} -> {}", url, why.to_string()),
+                Err(why) => println!("can't open {} -> {}", url, why),
             },
         };
     }
