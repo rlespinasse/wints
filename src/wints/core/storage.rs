@@ -33,42 +33,42 @@ impl WintsStorage {
             global_config: None,
         };
 
-        for entry in glob::glob(
+        for path in glob::glob(
             format!(
                 "{}/modules/*.yaml",
                 storage.local_basedir.as_path().display()
             )
             .as_str(),
-        )? {
-            if let Ok(path) = entry {
-                let module_name = path
-                    .file_stem()
-                    .unwrap()
-                    .to_os_string()
-                    .into_string()
-                    .unwrap();
-                let module = WintsStorage::load_module(&path)?;
-                storage.local_modules.insert(module_name, module);
-            }
+        )?
+        .flatten()
+        {
+            let module_name = path
+                .file_stem()
+                .unwrap()
+                .to_os_string()
+                .into_string()
+                .unwrap();
+            let module = WintsStorage::load_module(&path)?;
+            storage.local_modules.insert(module_name, module);
         }
 
-        for entry in glob::glob(
+        for path in glob::glob(
             format!(
                 "{}/modules/*.yaml",
                 storage.global_basedir.as_path().display()
             )
             .as_str(),
-        )? {
-            if let Ok(path) = entry {
-                let module_name = path
-                    .file_stem()
-                    .unwrap()
-                    .to_os_string()
-                    .into_string()
-                    .unwrap();
-                let module = WintsStorage::load_module(&path)?;
-                storage.global_modules.insert(module_name, module);
-            }
+        )?
+        .flatten()
+        {
+            let module_name = path
+                .file_stem()
+                .unwrap()
+                .to_os_string()
+                .into_string()
+                .unwrap();
+            let module = WintsStorage::load_module(&path)?;
+            storage.global_modules.insert(module_name, module);
         }
 
         let local_config_path = storage.local_basedir.join("options.yaml");
@@ -89,14 +89,14 @@ impl WintsStorage {
                 .local_basedir
                 .join("modules")
                 .join(format!("{}.yaml", local_module.0));
-            WintsStorage::store_module(&local_module.1, path)?;
+            WintsStorage::store_module(local_module.1, path)?;
         }
         for global_module in &self.global_modules {
             let path = self
                 .global_basedir
                 .join("modules")
                 .join(format!("{}.yaml", global_module.0));
-            WintsStorage::store_module(&global_module.1, path)?;
+            WintsStorage::store_module(global_module.1, path)?;
         }
         if let Some(local_config) = &self.local_config {
             let path = self.local_basedir.join("options.yaml");
