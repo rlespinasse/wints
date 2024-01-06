@@ -17,7 +17,7 @@ pub fn main() -> Result<()> {
     command_exec(command_args)
 }
 
-fn cli() -> App {
+fn cli() -> clap::App<'static> {
     let args = commands::global_args();
     let subcommands = commands::builtin();
 
@@ -25,11 +25,9 @@ fn cli() -> App {
         .about("What I Need To See - a fuzzy term-based URLs opener")
         .version(crate_version!())
         .settings(&[
-            AppSettings::UnifiedHelpMessage,
             AppSettings::DeriveDisplayOrder,
-            AppSettings::VersionlessSubcommands,
             AppSettings::AllowExternalSubcommands,
         ])
-        .args(args.as_ref())
+        .args(args)
         .subcommands(subcommands)
 }

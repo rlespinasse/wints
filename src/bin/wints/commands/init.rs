@@ -10,20 +10,20 @@ use wints::util::command_prelude::*;
 pub fn command() -> App {
     subcommand("init")
         .about("Initialise a new module")
-        .args(general_args().as_ref())
+        .args(general_args())
         .arg(module_arg())
         .arg(global_arg())
         .arg(
             arg("template")
                 .help("Template name to use")
                 .value_name("TEMPLATE")
-                .possible_values(&["empty", "default"])
+                .possible_values(["empty", "default"])
                 .default_value("empty")
                 .index(1),
         )
 }
 
-pub fn exec(args: &ArgMatches<'_>) -> Result<()> {
+pub fn exec(args: &ArgMatches) -> Result<()> {
     let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
     let global_basedir = match args.value_of("global-config") {
         None => BaseDirs::new().unwrap().home_dir().join(".wints"),

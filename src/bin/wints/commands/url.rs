@@ -14,7 +14,7 @@ pub fn command() -> App {
         .subcommand(
             subcommand("ignore")
                 .about("Add an URL to the ignore list during scan")
-                .args(general_args().as_ref())
+                .args(general_args())
                 .arg(global_arg())
                 .arg(
                     arg("url")
@@ -27,7 +27,7 @@ pub fn command() -> App {
         .subcommand(
             subcommand("ignore-glob")
                 .about("Add an glob/file to the ignore list during scan")
-                .args(general_args().as_ref())
+                .args(general_args())
                 .arg(global_arg())
                 .arg(
                     arg("glob")
@@ -39,15 +39,15 @@ pub fn command() -> App {
         )
 }
 
-pub fn exec(args: &ArgMatches<'_>) -> Result<()> {
+pub fn exec(args: &ArgMatches) -> Result<()> {
     match args.subcommand() {
-        ("ignore", Some(ignore_url_matches)) => exec_ignore(ignore_url_matches),
-        ("ignore-glob", Some(ignore_glob_matches)) => exec_ignore_glob(ignore_glob_matches),
+        Some(("ignore", ignore_url_matches)) => exec_ignore(ignore_url_matches),
+        Some(("ignore-glob", ignore_glob_matches)) => exec_ignore_glob(ignore_glob_matches),
         _ => unreachable!(),
     }
 }
 
-pub fn exec_ignore(args: &ArgMatches<'_>) -> Result<()> {
+pub fn exec_ignore(args: &ArgMatches) -> Result<()> {
     let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
     let global_basedir = match args.value_of("global-config") {
         None => BaseDirs::new().unwrap().home_dir().join(".wints"),
@@ -66,7 +66,7 @@ pub fn exec_ignore(args: &ArgMatches<'_>) -> Result<()> {
     })
 }
 
-pub fn exec_ignore_glob(args: &ArgMatches<'_>) -> Result<()> {
+pub fn exec_ignore_glob(args: &ArgMatches) -> Result<()> {
     let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
     let global_basedir = match args.value_of("global-config") {
         None => BaseDirs::new().unwrap().home_dir().join(".wints"),

@@ -30,16 +30,16 @@ pub fn general_args() -> Vec<Arg> {
             .help("Folder of local configuration storage")
             .value_name("PATH")
             .default_value(".wints")
-            .short("C")
+            .short('C')
             .long("config"),
         arg("global-config")
             .help("Folder of global configuration storage [default: HOME_DIR/.wints]")
             .value_name("PATH")
-            .short("G")
+            .short('G')
             .long("global-config"),
         arg("dry-run")
             .help("Do not actually change anything, just log what are going to do")
-            .short("n")
+            .short('n')
             .long("dry-run"),
     ]
 }
@@ -49,18 +49,18 @@ pub fn module_arg() -> Arg {
         .help("Module name to use")
         .value_name("MODULE NAME")
         .default_value("main")
-        .short("m")
+        .short('m')
         .long("module")
 }
 
 pub fn global_arg() -> Arg {
     arg("global")
         .help("Work with global configuration")
-        .short("g")
+        .short('g')
         .long("global")
 }
 
-pub fn builtin_exec(cmd: &str) -> fn(&ArgMatches<'_>) -> Result<()> {
+pub fn builtin_exec(cmd: &str) -> fn(&ArgMatches) -> Result<()> {
     match cmd {
         "init" => init::exec,
         "add" => add::exec,
@@ -70,6 +70,6 @@ pub fn builtin_exec(cmd: &str) -> fn(&ArgMatches<'_>) -> Result<()> {
     }
 }
 
-pub fn global_exec() -> fn(&ArgMatches<'_>) -> Result<()> {
+pub fn global_exec() -> fn(&ArgMatches) -> Result<()> {
     search::exec
 }

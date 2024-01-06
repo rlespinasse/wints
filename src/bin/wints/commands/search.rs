@@ -13,20 +13,27 @@ pub fn args() -> Vec<Arg> {
         arg("terms")
             .help("Terms to search for")
             .value_name("TERM")
-            .conflicts_with("scan")
+            //.conflicts_with("scan")
             .multiple(true)
             .index(1),
     ]
 }
 
-pub fn exec(args: &ArgMatches<'_>) -> Result<()> {
+pub fn exec(args: &ArgMatches) -> Result<()> {
     let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
     let global_basedir = match args.value_of("global-config") {
         None => BaseDirs::new().unwrap().home_dir().join(".wints"),
         Some(value) => PathBuf::from(value),
     };
     let module_name = args.value_of("module").unwrap().to_string();
-    let matching_terms = args.values_of_lossy("terms");
+    let matching_terms = args.get_many::<String>("terms").map(|values_ref| {
+        values_ref
+            .collect::<Vec<&String>>()
+            .iter()
+            .map(|&a| a.to_string())
+            .collect()
+    });
+
     let dry_run = args.is_present("dry-run");
 
     ops::wints_search::search(SearchOptions {

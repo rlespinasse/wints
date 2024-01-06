@@ -10,7 +10,7 @@ use wints::util::command_prelude::*;
 pub fn command() -> App {
     subcommand("scan")
         .about("Scan a directory tree for new URLs")
-        .args(general_args().as_ref())
+        .args(general_args())
         .arg(module_arg())
         .arg(global_arg())
         .arg(
@@ -22,7 +22,7 @@ pub fn command() -> App {
         )
 }
 
-pub fn exec(args: &ArgMatches<'_>) -> Result<()> {
+pub fn exec(args: &ArgMatches) -> Result<()> {
     let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
     let global_basedir = match args.value_of("global-config") {
         None => BaseDirs::new().unwrap().home_dir().join(".wints"),
