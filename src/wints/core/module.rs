@@ -84,7 +84,7 @@ impl WintsModule {
             .iter()
             .filter(|element| {
                 let matching_terms_count =
-                    WintsModule::accuracy_of_matching_context(&matcher, &context, &element);
+                    WintsModule::accuracy_of_matching_context(&matcher, &context, element);
                 matching_terms_count == context.capacity()
             })
             .flat_map(|element| element.urls.clone())
@@ -104,15 +104,15 @@ impl WintsModule {
             .iter()
             .filter(|element| {
                 let matching_terms_count =
-                    WintsModule::accuracy_of_matching_context(&matcher, &context, &element);
+                    WintsModule::accuracy_of_matching_context(&matcher, &context, element);
                 matching_terms_count != context.capacity() && matching_terms_count != 0
             })
             .collect();
 
         partially_matching_elements.sort_by(|first, second| {
-            let first_count = WintsModule::accuracy_of_matching_context(&matcher, &context, &first);
+            let first_count = WintsModule::accuracy_of_matching_context(&matcher, &context, first);
             let second_count =
-                WintsModule::accuracy_of_matching_context(&matcher, &context, &second);
+                WintsModule::accuracy_of_matching_context(&matcher, &context, second);
             first_count.cmp(&second_count)
         });
 
