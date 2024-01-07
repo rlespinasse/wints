@@ -1,24 +1,10 @@
 = WINTS
 
-:crate-version: https://img.shields.io/crates/v/wints.svg
-:crate-downloads: https://img.shields.io/crates/d/wints.svg
-:crate: https://crates.io/crates/wints
-:ci-badge: https://github.com/rlespinasse/wints/workflows/Continuous%20integration/badge.svg
-:security-badge: https://github.com/rlespinasse/wints/workflows/Security%20audit/badge.svg
-:actions: https://github.com/rlespinasse/wints/actions
-:license-badge: https://img.shields.io/github/license/rlespinasse/wints
-:license: https://github.com/rlespinasse/wints/blob/v0.x/LICENSE
 :cargo-installation: https://doc.rust-lang.org/cargo/getting-started/installation.html
-
-image:{crate-version}[Crate,link={crate}]
-image:{crate-downloads}[Crate,link={crate}]
-image:{ci-badge}[CI Status,link={actions}]
-image:{security-badge}[Security Audit Status,link={actions}]
-image:{license-badge}[License,link={license}]
 
 You may have a lot of URLs for a lot of context.
 
-If the question is **What I Need To See in this context?**, then the answer is `wints`.
+If the question is `**W**hat **I** **N**eed **T**o **S**ee in this context?`, then the answer is `wints`.
 
 == Installation
 
