@@ -1,5 +1,4 @@
 pre-release-commit-message = "(build) Release {{version}}"
-no-dev-version = true
 pre-release-replacements = [
   {file="CHANGELOG.md", search="Unreleased", replace="{{version}}"},
   {file="CHANGELOG.md", search="\\.\\.\\.HEAD", replace="...{{tag_name}}"},

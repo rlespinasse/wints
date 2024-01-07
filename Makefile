@@ -47,8 +47,8 @@ deps:
 
 release-%:
 	@echo + $@
-	cargo release -- $*
+	cargo release --execute $*
 
 dryrun-release-%:
 	@echo + $@
-	cargo release --dry-run -vv -- $*
+	cargo release $*
