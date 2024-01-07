@@ -1,9 +1,11 @@
-use crate::WintsCommand;
+use std::fs;
+
 use anyhow::Result;
 use assert_cmd::prelude::*;
 use predicate::str::contains;
 use predicates::prelude::*;
-use std::fs;
+
+use crate::WintsCommand;
 
 #[test]
 fn ignore_glob_locally() -> Result<()> {

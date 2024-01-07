@@ -1,9 +1,11 @@
+use std::path::PathBuf;
+use std::process;
+
+use anyhow::Result;
+
 use crate::core::module::WintsModule;
 use crate::core::storage::WintsStorage;
 use crate::util::log::{CAUTION, DONE, DRY_RUN, GOTO, INFO, SAD, SEARCH, TRY};
-use anyhow::Result;
-use std::path::PathBuf;
-use std::process;
 
 pub struct SearchOptions {
     pub local_basedir: PathBuf,

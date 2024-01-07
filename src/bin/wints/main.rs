@@ -1,10 +1,10 @@
 #[macro_use]
 extern crate clap;
 
+use anyhow::Result;
+
 pub mod cli;
 pub mod commands;
-
-use anyhow::Result;
 
 fn main() -> Result<()> {
     cli::main()

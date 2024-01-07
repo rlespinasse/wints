@@ -1,8 +1,10 @@
+use std::path::PathBuf;
+
+use anyhow::Result;
+
 use crate::core::storage::WintsStorage;
 use crate::util::log::{DONE, DRY_RUN, INFO, SAD, SEARCH, WRITE};
 use crate::util::url_scanner;
-use anyhow::Result;
-use std::path::PathBuf;
 
 pub struct ScanOptions {
     pub local_basedir: PathBuf,

@@ -208,7 +208,7 @@ mod tests {
                 "https://test1.tld",
                 "https://test2.tld",
                 "https://test3.tld",
-                "https://test4.tld"
+                "https://test4.tld",
             ],
             module.list_of_all_urls()
         );
@@ -260,7 +260,7 @@ mod tests {
                 "https://test1.tld",
                 "https://test2.tld",
                 "https://test3.tld",
-                "https://test4.tld"
+                "https://test4.tld",
             ],
             module.list_of_urls_from_matching_context(vec_of_strings!["terms"])
         );

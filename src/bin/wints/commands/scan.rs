@@ -1,20 +1,21 @@
-use crate::commands::{general_args, global_arg, module_arg};
 use anyhow::Result;
-use clap::ArgMatches;
-use directories_next::BaseDirs;
-use std::path::PathBuf;
+use clap::{Arg, ArgMatches, Command};
+
 use wints::ops;
 use wints::ops::wints_scan::ScanOptions;
-use wints::util::command_prelude::*;
 
-pub fn command() -> App {
-    subcommand("scan")
+use crate::commands::{
+    general_args, get_global_basedir, get_pathbuf_arg, get_string_arg, global_arg, module_arg,
+};
+
+pub fn command() -> Command {
+    Command::new("scan")
         .about("Scan a directory tree for new URLs")
-        .args(general_args().as_ref())
+        .args(general_args())
         .arg(module_arg())
         .arg(global_arg())
         .arg(
-            arg("path")
+            Arg::new("path")
                 .help("Path to scan (file or directories)")
                 .value_name("PATH")
                 .default_value(".")
@@ -22,16 +23,13 @@ pub fn command() -> App {
         )
 }
 
-pub fn exec(args: &ArgMatches<'_>) -> Result<()> {
-    let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
-    let global_basedir = match args.value_of("global-config") {
-        None => BaseDirs::new().unwrap().home_dir().join(".wints"),
-        Some(value) => PathBuf::from(value),
-    };
-    let module_name = args.value_of("module").unwrap().to_string();
-    let scan_path = PathBuf::from(args.value_of("path").unwrap());
-    let global_module = args.is_present("global");
-    let dry_run = args.is_present("dry-run");
+pub fn exec(args: &ArgMatches) -> Result<()> {
+    let local_basedir = get_pathbuf_arg(args, "config");
+    let global_basedir = get_global_basedir(args);
+    let module_name = get_string_arg(args, "module");
+    let scan_path = get_pathbuf_arg(args, "path");
+    let global_module = args.get_flag("global");
+    let dry_run = args.get_flag("dry-run");
 
     ops::wints_scan::scan(ScanOptions {
         local_basedir,

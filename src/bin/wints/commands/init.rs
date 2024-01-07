@@ -1,38 +1,37 @@
-use crate::commands::{general_args, global_arg, module_arg};
 use anyhow::Result;
-use clap::ArgMatches;
-use directories_next::BaseDirs;
-use std::path::PathBuf;
+use clap::builder::PossibleValuesParser;
+use clap::{Arg, ArgMatches, Command};
+
 use wints::ops;
 use wints::ops::wints_init::InitOptions;
-use wints::util::command_prelude::*;
 
-pub fn command() -> App {
-    subcommand("init")
+use crate::commands::{
+    general_args, get_global_basedir, get_pathbuf_arg, get_string_arg, global_arg, module_arg,
+};
+
+pub fn command() -> Command {
+    Command::new("init")
         .about("Initialise a new module")
-        .args(general_args().as_ref())
+        .args(general_args())
         .arg(module_arg())
         .arg(global_arg())
         .arg(
-            arg("template")
+            Arg::new("template")
                 .help("Template name to use")
                 .value_name("TEMPLATE")
-                .possible_values(&["empty", "default"])
+                .value_parser(PossibleValuesParser::new(["empty", "default"]))
                 .default_value("empty")
                 .index(1),
         )
 }
 
-pub fn exec(args: &ArgMatches<'_>) -> Result<()> {
-    let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
-    let global_basedir = match args.value_of("global-config") {
-        None => BaseDirs::new().unwrap().home_dir().join(".wints"),
-        Some(value) => PathBuf::from(value),
-    };
-    let module_name = args.value_of("module").unwrap().to_string();
-    let template = args.value_of("template").unwrap().to_string();
-    let global_module = args.is_present("global");
-    let dry_run = args.is_present("dry-run");
+pub fn exec(args: &ArgMatches) -> Result<()> {
+    let local_basedir = get_pathbuf_arg(args, "config");
+    let global_basedir = get_global_basedir(args);
+    let module_name = get_string_arg(args, "module");
+    let template = get_string_arg(args, "template");
+    let global_module = args.get_flag("global");
+    let dry_run = args.get_flag("dry-run");
 
     ops::wints_init::init(InitOptions {
         local_basedir,

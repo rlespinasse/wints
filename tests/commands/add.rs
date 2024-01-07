@@ -1,8 +1,9 @@
-use crate::WintsCommand;
 use anyhow::Result;
 use assert_cmd::prelude::*;
 use predicate::str::contains;
 use predicates::prelude::*;
+
+use crate::WintsCommand;
 
 #[test]
 fn add_to_main_module() -> Result<()> {
