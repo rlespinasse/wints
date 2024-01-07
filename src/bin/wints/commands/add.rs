@@ -1,27 +1,28 @@
-use crate::commands::{general_args, global_arg, module_arg};
 use anyhow::Result;
-use clap::ArgMatches;
-use directories_next::BaseDirs;
-use std::path::PathBuf;
+use clap::{Arg, ArgMatches, Command};
+
 use wints::ops;
 use wints::ops::wints_add::AddOptions;
-use wints::util::command_prelude::*;
 
-pub fn command() -> App {
-    subcommand("add")
+use crate::commands::{
+    general_args, get_global_basedir, get_pathbuf_arg, get_string_arg, global_arg, module_arg,
+};
+
+pub fn command() -> Command {
+    Command::new("add")
         .about("Add a url to a context")
         .args(general_args())
         .arg(module_arg())
         .arg(global_arg())
         .arg(
-            arg("url")
+            Arg::new("url")
                 .help("URL to set")
                 .value_name("URL")
                 .required(true)
                 .index(1),
         )
         .arg(
-            arg("context")
+            Arg::new("context")
                 .help("Context of the URL")
                 .value_name("CONTEXT")
                 .required(true)
@@ -30,16 +31,13 @@ pub fn command() -> App {
 }
 
 pub fn exec(args: &ArgMatches) -> Result<()> {
-    let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
-    let global_basedir = match args.value_of("global-config") {
-        None => BaseDirs::new().unwrap().home_dir().join(".wints"),
-        Some(value) => PathBuf::from(value),
-    };
-    let module_name = args.value_of("module").unwrap().to_string();
-    let url = args.value_of("url").unwrap().to_string();
-    let context = args.value_of("context").unwrap().to_string();
-    let global_module = args.is_present("global");
-    let dry_run = args.is_present("dry-run");
+    let local_basedir = get_pathbuf_arg(args, "config");
+    let global_basedir = get_global_basedir(args);
+    let module_name = get_string_arg(args, "module");
+    let url = get_string_arg(args, "url");
+    let context = get_string_arg(args, "context");
+    let global_module = args.get_flag("global");
+    let dry_run = args.get_flag("dry-run");
 
     ops::wints_add::add(AddOptions {
         local_basedir,

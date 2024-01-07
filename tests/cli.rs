@@ -1,14 +1,14 @@
-mod commands;
-
-use std::process::Command;
-
-use anyhow::Result;
-use assert_cmd::prelude::*;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
+use std::process::Command;
+
+use anyhow::Result;
+use assert_cmd::prelude::*;
 use tempfile::tempdir;
+
+mod commands;
 
 pub struct WintsCommand {
     pub cmd: Command,

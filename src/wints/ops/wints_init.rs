@@ -1,9 +1,11 @@
+use std::path::PathBuf;
+use std::process;
+
+use anyhow::Result;
+
 use crate::core::module::WintsModule;
 use crate::core::storage::WintsStorage;
 use crate::util::log::{CAUTION, DRY_RUN, WRITE};
-use anyhow::Result;
-use std::path::PathBuf;
-use std::process;
 
 pub struct InitOptions {
     pub local_basedir: PathBuf,

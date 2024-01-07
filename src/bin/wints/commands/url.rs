@@ -1,23 +1,24 @@
-use crate::commands::{general_args, global_arg};
 use anyhow::Result;
-use clap::ArgMatches;
-use directories_next::BaseDirs;
-use std::path::PathBuf;
+use clap::{Arg, ArgMatches, Command};
+
 use wints::ops;
 use wints::ops::wints_url_ignore::IgnoreUrlOptions;
 use wints::ops::wints_url_ignore_glob::IgnoreGlobOptions;
-use wints::util::command_prelude::*;
 
-pub fn command() -> App {
-    subcommand("url")
+use crate::commands::{
+    general_args, get_global_basedir, get_pathbuf_arg, get_string_arg, global_arg,
+};
+
+pub fn command() -> Command {
+    Command::new("url")
         .about("Actions about url configuration")
         .subcommand(
-            subcommand("ignore")
+            Command::new("ignore")
                 .about("Add an URL to the ignore list during scan")
                 .args(general_args())
                 .arg(global_arg())
                 .arg(
-                    arg("url")
+                    Arg::new("url")
                         .help("URL to ignore")
                         .value_name("URL")
                         .required(true)
@@ -25,12 +26,12 @@ pub fn command() -> App {
                 ),
         )
         .subcommand(
-            subcommand("ignore-glob")
+            Command::new("ignore-glob")
                 .about("Add an glob/file to the ignore list during scan")
                 .args(general_args())
                 .arg(global_arg())
                 .arg(
-                    arg("glob")
+                    Arg::new("glob")
                         .help("Glob/file to ignore")
                         .value_name("GLOB")
                         .required(true)
@@ -48,14 +49,11 @@ pub fn exec(args: &ArgMatches) -> Result<()> {
 }
 
 pub fn exec_ignore(args: &ArgMatches) -> Result<()> {
-    let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
-    let global_basedir = match args.value_of("global-config") {
-        None => BaseDirs::new().unwrap().home_dir().join(".wints"),
-        Some(value) => PathBuf::from(value),
-    };
-    let url = args.value_of("url").unwrap().to_string();
-    let global = args.is_present("global");
-    let dry_run = args.is_present("dry-run");
+    let local_basedir = get_pathbuf_arg(args, "config");
+    let global_basedir = get_global_basedir(args);
+    let url = get_string_arg(args, "url");
+    let global = args.get_flag("global");
+    let dry_run = args.get_flag("dry-run");
 
     ops::wints_url_ignore::ignore_url(IgnoreUrlOptions {
         local_basedir,
@@ -67,14 +65,11 @@ pub fn exec_ignore(args: &ArgMatches) -> Result<()> {
 }
 
 pub fn exec_ignore_glob(args: &ArgMatches) -> Result<()> {
-    let local_basedir = PathBuf::from(args.value_of("config").unwrap().to_string());
-    let global_basedir = match args.value_of("global-config") {
-        None => BaseDirs::new().unwrap().home_dir().join(".wints"),
-        Some(value) => PathBuf::from(value),
-    };
-    let glob = args.value_of("glob").unwrap().to_string();
-    let global = args.is_present("global");
-    let dry_run = args.is_present("dry-run");
+    let local_basedir = get_pathbuf_arg(args, "config");
+    let global_basedir = get_global_basedir(args);
+    let glob = get_string_arg(args, "glob");
+    let global = args.get_flag("global");
+    let dry_run = args.get_flag("dry-run");
 
     ops::wints_url_ignore_glob::ignore_glob(IgnoreGlobOptions {
         local_basedir,

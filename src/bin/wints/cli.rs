@@ -1,7 +1,7 @@
-use crate::commands;
 use anyhow::Result;
-use clap::AppSettings;
-use wints::util::command_prelude::*;
+use clap::Command;
+
+use crate::commands;
 
 pub fn main() -> Result<()> {
     let matches = cli().get_matches();
@@ -17,17 +17,14 @@ pub fn main() -> Result<()> {
     command_exec(command_args)
 }
 
-fn cli() -> clap::App<'static> {
+fn cli() -> Command {
     let args = commands::global_args();
     let subcommands = commands::builtin();
 
-    App::new("wints")
+    Command::new("wints")
         .about("What I Need To See - a fuzzy term-based URLs opener")
         .version(crate_version!())
-        .settings(&[
-            AppSettings::DeriveDisplayOrder,
-            AppSettings::AllowExternalSubcommands,
-        ])
+        .allow_external_subcommands(true)
         .args(args)
         .subcommands(subcommands)
 }
