@@ -154,7 +154,6 @@ impl WintsStorage {
         fs::create_dir_all(ignore_path.parent().unwrap())?;
 
         let mut file = OpenOptions::new()
-            .write(true)
             .append(true)
             .create(true)
             .open(ignore_path)?;
