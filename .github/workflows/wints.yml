@@ -41,4 +41,6 @@ jobs:
         run: just clippy
 
       - name: Audit
-        run: just audit
+        run: |
+          cargo install cargo-audit
+          just audit
