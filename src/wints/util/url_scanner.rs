@@ -2,8 +2,8 @@ use std::path::PathBuf;
 
 use anyhow::Result;
 use grep::regex::RegexMatcher;
-use grep::searcher::sinks::UTF8;
 use grep::searcher::Searcher;
+use grep::searcher::sinks::UTF8;
 use ignore::{Walk, WalkBuilder};
 use linkify::{LinkFinder, LinkKind};
 
