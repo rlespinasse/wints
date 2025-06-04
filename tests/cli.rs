@@ -41,7 +41,7 @@ impl WintsCommand {
         let cmd = Command::cargo_bin("wints")?;
 
         let tempdir = tempdir()?;
-        let current_dir = tempdir.into_path();
+        let current_dir = tempdir.keep();
         let local_config_dir = current_dir.join("local_config_dir");
         let home_dir_config_dir = current_dir.join("home_dir_config_dir");
 
