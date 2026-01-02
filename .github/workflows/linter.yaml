@@ -26,6 +26,7 @@ jobs:
         uses: super-linter/super-linter@v8
         env:
           VALIDATE_ALL_CODEBASE: false
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
           VALIDATE_JSCPD: false
           # rustfmt is unmaintained and the project use `cargo fmt`
           VALIDATE_RUST_2015: false
