@@ -6,7 +6,6 @@ use std::process::Command;
 
 use anyhow::Result;
 use assert_cmd::cargo;
-use assert_cmd::prelude::*;
 use tempfile::tempdir;
 
 mod commands;
