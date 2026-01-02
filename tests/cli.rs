@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 use anyhow::Result;
-use assert_cmd::prelude::*;
+use assert_cmd::cargo;
 use tempfile::tempdir;
 
 mod commands;
@@ -33,12 +33,12 @@ impl WintsCommand {
     }
 
     pub fn new_cmd(&mut self) -> Result<()> {
-        self.cmd = Command::cargo_bin("wints")?;
+        self.cmd = Command::new(cargo::cargo_bin!("wints"));
         Ok(())
     }
 
     pub fn new() -> Result<WintsCommand> {
-        let cmd = Command::cargo_bin("wints")?;
+        let cmd = Command::new(cargo::cargo_bin!("wints"));
 
         let tempdir = tempdir()?;
         let current_dir = tempdir.keep();
