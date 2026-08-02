@@ -100,6 +100,35 @@ fn default_template() -> Result<()> {
 }
 
 #[test]
+fn dry_run_does_not_write() -> Result<()> {
+    let mut wints = WintsCommand::new()?;
+
+    wints
+        .cmd
+        .arg("init")
+        .arg("--config")
+        .arg(wints.local_config_dir.display().to_string())
+        .arg("--global-config")
+        .arg(wints.home_dir_config_dir.display().to_string())
+        .arg("--dry-run")
+        .arg("default");
+
+    wints
+        .cmd
+        .assert()
+        .success()
+        .stdout(contains(" 📝 Initialise 'main' with template 'default'..."))
+        .stdout(contains(" 🌀 Add 'main' module with 4 contexts and 4 URLs"));
+
+    assert!(
+        !wints.local_config_dir.exists(),
+        "dry-run must not create the local config dir"
+    );
+
+    Ok(())
+}
+
+#[test]
 fn using_module() -> Result<()> {
     let mut wints = WintsCommand::new()?;
 

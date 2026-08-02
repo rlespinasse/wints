@@ -44,8 +44,8 @@ pub fn init(options: InitOptions) -> Result<()> {
                 " {} Add '{}' module with {} contexts and {} URLs",
                 DRY_RUN,
                 options.module_name,
-                &module.list_of_all_contexts().len(),
-                &module.list_of_all_urls().len()
+                module.list_of_all_contexts().len(),
+                module.list_of_all_urls().len()
             );
         }
         false => {
@@ -63,8 +63,8 @@ pub fn init(options: InitOptions) -> Result<()> {
                 " {} A new '{}' module have been created with {} contexts and {} URLs",
                 WRITE,
                 options.module_name,
-                &module.list_of_all_contexts().len(),
-                &module.list_of_all_urls().len()
+                module.list_of_all_contexts().len(),
+                module.list_of_all_urls().len()
             );
         }
     }
